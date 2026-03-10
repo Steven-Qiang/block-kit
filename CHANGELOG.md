@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/Steven-Qiang/block-kit/compare/v1.4.0...v1.5.0) (2026-03-10)
+
+
+### Features
+
+* 新增黑名单管理功能，快捷导出黑名单列表 ([7a3586f](https://github.com/Steven-Qiang/block-kit/commit/7a3586fcc838bba2b2b2878487c4843974d0bedd))
+
 # [1.4.0](https://github.com/Steven-Qiang/block-kit/compare/v1.3.2...v1.4.0) (2026-02-21)
 
 

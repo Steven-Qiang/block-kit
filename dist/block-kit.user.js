@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         批量拉黑工具
 // @namespace    block-kit
-// @version      1.4.0
+// @version      1.5.0
 // @author       Steven-Qiang
 // @description  基于关键词搜索用户并批量拉黑的多平台油猴脚本，支持抖音、哔哩哔哩等
 // @license      MIT
@@ -26,7 +26,7 @@
 
   const name = "block-kit";
   const type = "module";
-  const version = "1.4.0";
+  const version = "1.5.0";
   const packageManager = "pnpm@10.24.0";
   const description = "基于关键词搜索用户并批量拉黑的多平台油猴脚本，支持抖音、哔哩哔哩等";
   const author = "Steven-Qiang";
