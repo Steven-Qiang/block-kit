@@ -10,16 +10,49 @@ export interface KeywordTemplate {
 export type CreateTemplateData = Omit<KeywordTemplate, 'id' | 'source'>;
 
 const STORAGE_KEY = 'block-kit-templates';
+const COMMUNITY_INITIALIZED_KEY = 'block-kit-community-initialized';
 
 const COMMUNITY_TEMPLATES: KeywordTemplate[] = [
-  { id: 'community-fake-propaganda', name: '虚假宣传', icon: '🚫', keywords: '助农,扶贫,山区,贫困,养生,中医,秘方,创业,成功,财富,逆袭', source: 'community', author: 'Steven-Qiang' },
-  { id: 'community-fake-science', name: '伪科普', icon: '🧪', keywords: '科普,农技,健康,知识,真相,偏方,神药,特效,包治', source: 'community', author: 'Steven-Qiang' },
-  { id: 'community-game-promotion', name: '游戏推广', icon: '🎮', keywords: '游戏,攻略,礼包,福利,充值,代练,外挂,破解', source: 'community', author: 'Steven-Qiang' },
-  { id: 'community-impersonation-accounts', name: '冒充他人', icon: '🎭', keywords: '靳东,刘德华,马云,明星,名人,官方,政府,机构,认证,权威', source: 'community', author: 'Steven-Qiang' },
-  { id: 'community-low-quality-content', name: '低俗引流', icon: '🔞', keywords: '街拍,搭讪,偶遇,美女,性感,诱惑,福利,私密,深夜', source: 'community', author: 'Steven-Qiang' },
-  { id: 'community-marketing-accounts', name: '营销号', icon: '📰', keywords: '热点,评测,文旅,考公,新闻,日报,资讯,头条,快讯', source: 'community', author: 'Steven-Qiang' },
-  { id: 'community-scam-marketing', name: '诱导消费', icon: '💸', keywords: '免费,红包,福利,领取,抽奖,紧急,限时,最后,错过,机会', source: 'community', author: 'Steven-Qiang' },
-  { id: 'community-superstition-accounts', name: '玄学迷信', icon: '🔮', keywords: '国学,玄学,八字,命理,化灾,风水,算命,转运,开光', source: 'community', author: 'Steven-Qiang' }
+  {
+    id: 'community-official-media',
+    name: '官方新闻媒体',
+    icon: '📰',
+    keywords: '新闻,共青团,官方,日报,资讯,政务,央视,新华,人民,时讯,快讯,发布,权威,央媒,党媒,快报,要闻,团委,中青,时政,民生,法治,纪检,监察,公示,公告,通知,官微,政讯',
+    source: 'community',
+    author: 'Steven-Qiang',
+  },
+  {
+    id: 'community-marketing-account',
+    name: '营销号流量号',
+    icon: '📢',
+    keywords: '热点,评测,文旅,考公,头条',
+    source: 'community',
+    author: 'Steven-Qiang'
+  },
+  {
+    id: 'community-metaphysics-superstition',
+    name: '玄学迷信',
+    icon: '🔮',
+    keywords: '中医,玄学,八字,命理,化灾,风水,算命,转运,开光,卜卦,占星,手相,面相,祈福,辟邪,招财',
+    source: 'community',
+    author: 'Steven-Qiang'
+  },
+  {
+    id: 'community-tv-channel',
+    name: '电视台栏目频道',
+    icon: '📺',
+    keywords: '电视台,栏目,卫视,综艺,影视,剧场,节目,文艺,文娱,剧集,热播,栏目组,地方台,卫视直播,卫视综艺,综合频道',
+    source: 'community',
+    author: 'Steven-Qiang',
+  },
+  {
+    id: 'community-game-promotion',
+    name: '游戏推广',
+    icon: '🎮',
+    keywords: '游戏,手游,网游,传奇,私服,外挂,代练,礼包,皮肤,充值,返利,内测,公测,仙侠,卡牌,辅助,福利',
+    source: 'community',
+    author: 'Steven-Qiang'
+  },
 ];
 
 class TemplateStore {
@@ -31,10 +64,15 @@ class TemplateStore {
   }
 
   private initCommunityTemplates() {
-    const hasCommunity = this.templates.some((t) => t.source === 'community');
-    if (!hasCommunity) {
-      this.templates.push(...COMMUNITY_TEMPLATES);
-      this.saveTemplates();
+    try {
+      const initialized = GM_getValue(COMMUNITY_INITIALIZED_KEY, false);
+      if (!initialized) {
+        this.templates.push(...COMMUNITY_TEMPLATES);
+        this.saveTemplates();
+        GM_setValue(COMMUNITY_INITIALIZED_KEY, true);
+      }
+    } catch (error) {
+      console.error('Failed to initialize community templates:', error);
     }
   }
 

@@ -1,9 +1,26 @@
-import type { Platform, SearchResult, User } from './types';
+import type { Platform, SearchResult, Theme, User } from './types';
 import { PlatformType } from './types';
+
+const CSRF_TOKEN_REGEX = /bili_jct=([^;]+)/; // cspell:ignore bili
+
+const BILIBILI_THEME: Theme = {
+  primary: '#fb7299',
+  primaryHover: '#e85a8a',
+  secondary: '#e74c3c',
+  secondaryHover: '#c0392b',
+  success: '#27ae60',
+  error: '#e74c3c',
+  warning: '#f39c12',
+  info: '#3498db',
+  muted: '#95a5a6',
+  headerBg: '#fb7299',
+  headerText: '#fff',
+};
 
 export class BilibiliPlatform implements Platform {
   name = PlatformType.BILIBILI;
   displayName = '哔哩哔哩';
+  theme = BILIBILI_THEME;
   private blacklist = new Set<string>();
 
   isCurrentPlatform(): boolean {
@@ -18,9 +35,12 @@ export class BilibiliPlatform implements Platform {
     onProgress?.('正在加载黑名单...');
 
     while (hasMore) {
-      const res = await fetch(`https://api.bilibili.com/x/relation/blacks?re_version=0&pn=${page}&ps=50&jsonp=jsonp&web_location=333.33`, {
-        credentials: 'include',
-      });
+      const res = await fetch(
+        `https://api.bilibili.com/x/relation/blacks?re_version=0&pn=${page}&ps=50&jsonp=jsonp&web_location=333.33`,
+        {
+          credentials: 'include',
+        }
+      );
       const data = await res.json();
       const list = data.data?.list || [];
 
@@ -91,14 +111,17 @@ export class BilibiliPlatform implements Platform {
 
     const body = `fid=${user.uid}&act=5&re_src=11&gaia_source=web_main&spmid=333.1387.0.0&extend_content=${encodeURIComponent(JSON.stringify({ entity: 'user', entity_id: Number.parseInt(user.uid) }))}&csrf=${csrf}`;
 
-    const res = await fetch('https://api.bilibili.com/x/relation/modify?statistics=%7B%22appId%22:100,%22platform%22:5%7D', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded',
-      },
-      body,
-      credentials: 'include',
-    });
+    const res = await fetch(
+      'https://api.bilibili.com/x/relation/modify?statistics=%7B%22appId%22:100,%22platform%22:5%7D',
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+        body,
+        credentials: 'include',
+      }
+    );
 
     const data = await res.json();
     if (data.code === 0) {
@@ -108,8 +131,53 @@ export class BilibiliPlatform implements Platform {
     return false;
   }
 
+  async removeFromBlacklist(uid: string): Promise<boolean> {
+    const csrf = this.getCsrfToken();
+    if (!csrf) return false;
+
+    const body = `fid=${uid}&act=6&re_src=11&csrf=${csrf}`;
+
+    const res = await fetch('https://api.bilibili.com/x/relation/modify', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      body,
+      credentials: 'include',
+    });
+
+    const data = await res.json();
+    return data.code === 0;
+  }
+
+  async fetchBlacklist(): Promise<Array<{ uid: string; name: string }>> {
+    const blacklist: Array<{ uid: string; name: string }> = [];
+    let page = 1;
+
+    while (true) {
+      const res = await fetch(
+        `https://api.bilibili.com/x/relation/blacks?re_version=0&pn=${page}&ps=50&jsonp=jsonp&web_location=333.33`,
+        {
+          credentials: 'include',
+        }
+      );
+      const data = await res.json();
+      const list = data.data?.list || [];
+
+      if (list.length === 0) break;
+
+      for (const item of list) {
+        blacklist.push({ uid: item.mid, name: item.uname });
+      }
+
+      page++;
+    }
+
+    return blacklist;
+  }
+
   private getCsrfToken(): string | null {
-    const match = document.cookie.match(/bili_jct=([^;]+)/);
+    const match = document.cookie.match(CSRF_TOKEN_REGEX);
     return match ? match[1] : null;
   }
 }

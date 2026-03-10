@@ -15,9 +15,24 @@ export interface SearchResult {
   hasMore: boolean;
 }
 
+export interface Theme {
+  primary: string;
+  primaryHover: string;
+  secondary: string;
+  secondaryHover: string;
+  success: string;
+  error: string;
+  warning: string;
+  info: string;
+  muted: string;
+  headerBg: string;
+  headerText: string;
+}
+
 export interface Platform {
   name: PlatformType;
   displayName: string;
+  theme: Theme;
   searchUsers: (keyword: string, page: number, onProgress?: (message: string) => void) => Promise<SearchResult>;
   blockUser: (user: User) => Promise<boolean>;
   isCurrentPlatform: () => boolean;

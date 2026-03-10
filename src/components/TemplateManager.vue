@@ -4,7 +4,7 @@
       <h3>预设管理</h3>
       <div>
         <button class="btn-add" title="创建新的关键词预设" @click="showAddDialog = true">
-          ➕ 新建
+          <img :src="addCircleSvg" alt="新建">
         </button>
       </div>
     </div>
@@ -16,12 +16,8 @@
           <div class="template-details">
             <div class="template-name">
               {{ template.name }}
-              <span v-if="template.source === 'community'" class="template-author">
-                by {{ template.author }}
-              </span>
-              <span v-else-if="template.source === 'user'" class="template-source">
-                自定义
-              </span>
+              <span v-if="template.source === 'community'" class="template-author">by {{ template.author }}</span>
+              <span v-else-if="template.source === 'user'" class="template-source">自定义</span>
             </div>
             <div class="template-keywords">
               {{ template.keywords }}
@@ -30,13 +26,13 @@
         </div>
         <div class="template-actions">
           <button class="btn-edit" title="编辑此预设" @click="editTemplate(template)">
-            ✏️
+            <img :src="editSvg" alt="编辑">
           </button>
           <button class="btn-share" title="复制预设到剪贴板" @click="shareTemplate(template)">
-            📤
+            <img :src="copySvg" alt="分享">
           </button>
           <button class="btn-delete" title="删除此预设" @click="deleteTemplate(index)">
-            🗑️
+            <img :src="trashSvg" alt="删除">
           </button>
         </div>
       </div>
@@ -44,12 +40,8 @@
 
     <div class="import-section">
       <h4>导入预设</h4>
-      <textarea
-        v-model="importText"
-        placeholder="粘贴预设 JSON 数据..."
-        rows="2"
-      />
-      <button class="btn-import" title="导入预设 JSON 数据" @click="importTemplate">
+      <textarea v-model="importText" placeholder="粘贴预设 JSON 数据..." rows="2" />
+      <button class="btn-start" title="导入预设 JSON 数据" @click="importTemplate">
         导入
       </button>
     </div>
@@ -68,11 +60,7 @@
         </div>
         <div class="form-group">
           <label>关键词：</label>
-          <textarea
-            v-model="currentTemplate.keywords"
-            placeholder="用逗号分隔，例如：新闻,日报,资讯"
-            rows="2"
-          />
+          <textarea v-model="currentTemplate.keywords" placeholder="用逗号分隔，例如：新闻,日报,资讯" rows="3" />
         </div>
         <div class="dialog-actions">
           <button class="btn-cancel" title="取消操作" @click="closeDialog">
@@ -90,7 +78,14 @@
 <script setup lang="ts">
 import type { KeywordTemplate } from '../stores/templateStore';
 import { onMounted, ref } from 'vue';
+import addCircleSvg from '../assets/add-circle.svg';
+import trashSvg from '../assets/ashbin.svg';
+import copySvg from '../assets/copy.svg';
+import editSvg from '../assets/edit.svg';
 import { useTemplateStore } from '../stores/templateStore';
+
+// Emoji 正则表达式
+const EMOJI_REGEX = /^[\p{Emoji}\p{Emoji_Component}]+$/u;
 
 const templateStore = useTemplateStore();
 const templates = ref(templateStore.getTemplates());
@@ -102,7 +97,7 @@ const importText = ref('');
 const currentTemplate = ref({
   name: '',
   icon: '',
-  keywords: ''
+  keywords: '',
 });
 
 function editTemplate(template: KeywordTemplate) {
@@ -119,6 +114,11 @@ function closeDialog() {
 function saveTemplate() {
   if (!currentTemplate.value.name || !currentTemplate.value.keywords) {
     alert('请填写完整信息！');
+    return;
+  }
+
+  if (currentTemplate.value.icon && !EMOJI_REGEX.test(currentTemplate.value.icon)) {
+    alert('图标必须是单个 emoji！');
     return;
   }
 
@@ -173,7 +173,7 @@ function importTemplate() {
     templateStore.addTemplate({
       name: templateData.name.trim(),
       icon: templateData.icon.trim(),
-      keywords: templateData.keywords.trim()
+      keywords: templateData.keywords.trim(),
     });
 
     templates.value = templateStore.getTemplates();
@@ -209,12 +209,26 @@ onMounted(() => {
 
 .btn-add {
   padding: 4px 8px;
-  background: #667eea;
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 11px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-add img {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) invert(1);
+}
+
+.btn-add:hover {
+  background: var(--color-primary-hover);
 }
 
 .template-list {
@@ -262,13 +276,13 @@ onMounted(() => {
 
 .template-author {
   font-size: 10px;
-  color: #28a745;
+  color: var(--color-success);
   font-weight: normal;
 }
 
 .template-source {
   font-size: 10px;
-  color: #667eea;
+  color: var(--color-primary);
   font-weight: normal;
 }
 
@@ -292,18 +306,42 @@ onMounted(() => {
   border-radius: 3px;
   cursor: pointer;
   font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.template-actions button img {
+  width: 14px;
+  height: 14px;
+  filter: invert(0.4);
 }
 
 .btn-edit {
-  background: #f0f4ff;
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.btn-edit:hover {
+  background: #d5dbdb;
 }
 
 .btn-share {
-  background: #f0fff4;
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.btn-share:hover {
+  background: #d5dbdb;
 }
 
 .btn-delete {
-  background: #fff0f0;
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.btn-delete:hover {
+  background: #d5dbdb;
 }
 
 .btn-edit:disabled,
@@ -329,16 +367,6 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
-  font-size: 11px;
-}
-
-.btn-import {
-  padding: 4px 8px;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
   font-size: 11px;
 }
 
@@ -390,21 +418,31 @@ onMounted(() => {
 
 .btn-cancel {
   padding: 4px 8px;
-  background: #6c757d;
+  background: #95a5a6;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 11px;
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #7f8c8d;
 }
 
 .btn-save {
   padding: 4px 8px;
-  background: #667eea;
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 11px;
+  transition: background 0.2s;
+}
+
+.btn-save:hover {
+  background: var(--color-primary-hover);
 }
 </style>

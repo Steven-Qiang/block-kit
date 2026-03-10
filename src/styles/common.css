@@ -1,3 +1,17 @@
+:root {
+  --color-primary: #fb7299;
+  --color-primary-hover: #e85a8a;
+  --color-secondary: #e74c3c;
+  --color-secondary-hover: #c0392b;
+  --color-success: #27ae60;
+  --color-error: #e74c3c;
+  --color-warning: #f39c12;
+  --color-info: #3498db;
+  --color-muted: #95a5a6;
+  --color-header-bg: #fb7299;
+  --color-header-text: #fff;
+}
+
 .content {
   padding: 16px;
 }
@@ -48,26 +62,35 @@ button {
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .btn-start {
-  background: #667eea;
+  background: var(--color-primary);
   color: #fff;
 }
 
+.btn-start:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
 .btn-start:disabled {
-  background: #ccc;
+  background: #bdc3c7;
   cursor: not-allowed;
 }
 
 .btn-stop {
-  background: #ff5722;
+  background: var(--color-secondary);
   color: #fff;
 }
 
+.btn-stop:hover:not(:disabled) {
+  background: var(--color-secondary-hover);
+}
+
 .btn-stop:disabled {
-  background: #ccc;
+  background: #bdc3c7;
   cursor: not-allowed;
 }
 
@@ -88,6 +111,14 @@ button {
 
 .log-item {
   margin-bottom: 4px;
+}
+
+.svg-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  margin-right: 4px;
+  vertical-align: -2px;
 }
 
 .counter {

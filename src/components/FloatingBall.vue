@@ -6,16 +6,10 @@
     :style="{ top: `${panelY}px`, left: `${panelX}px` }"
     @mousedown="handleMouseDown"
   >
-    <div class="ball-icon">
-      🚫
-    </div>
+    <img :src="logoSvg" class="ball-icon" alt="logo">
     <div class="ripple" />
   </div>
-  <div
-    v-else
-    class="panel"
-    :style="{ top: `${panelY}px`, left: `${panelX}px`, width: `${panelWidth}px` }"
-  >
+  <div v-else class="panel" :style="{ top: `${panelY}px`, left: `${panelX}px`, width: `${panelWidth}px` }">
     <div class="header" @mousedown="handleMouseDown">
       <span>{{ title }}</span>
       <button class="close-btn" title="收起面板" @click="isExpanded = false">
@@ -30,6 +24,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue';
+import logoSvg from '../assets/shielding.svg';
 
 interface Props {
   title: string;
@@ -50,15 +45,19 @@ const startY = ref(0);
 const panelX = ref(20);
 const panelY = ref(window.innerHeight * 0.1);
 
-watch(() => props.defaultExpanded, (newVal) => {
-  if (!isInitialized.value && newVal !== undefined) {
-    isExpanded.value = newVal;
-    isInitialized.value = true;
-    if (newVal) {
-      setTimeout(snapToEdge, 50);
+watch(
+  () => props.defaultExpanded,
+  (newVal) => {
+    if (!isInitialized.value && newVal !== undefined) {
+      isExpanded.value = newVal;
+      isInitialized.value = true;
+      if (newVal) {
+        setTimeout(snapToEdge, 50);
+      }
     }
-  }
-}, { immediate: true });
+  },
+  { immediate: true }
+);
 
 function updatePanelWidth() {
   const screenWidth = window.innerWidth;
@@ -71,9 +70,9 @@ function snapToEdge() {
   let targetX;
 
   if (isExpanded.value) {
-    targetX = centerX < screenWidth / 2 ? 10 : screenWidth - panelWidth.value - 10;
+    targetX = centerX < screenWidth / 2 ? 10 : screenWidth - panelWidth.value - 20;
   } else {
-    targetX = centerX < screenWidth / 2 ? 10 : screenWidth - 70;
+    targetX = centerX < screenWidth / 2 ? 10 : screenWidth - 80;
   }
 
   isAnimating.value = true;
@@ -143,7 +142,7 @@ onUnmounted(() => {
   position: fixed;
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-header-bg);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -151,7 +150,8 @@ onUnmounted(() => {
   color: #fff;
   font-size: 24px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: var(--float-ball-border, none);
   z-index: 999999;
   user-select: none;
   overflow: hidden;
@@ -167,13 +167,13 @@ onUnmounted(() => {
 
 .float-ball.dragging {
   transition: none;
-  transform: scale(1.1);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .float-ball:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .float-ball:active {
@@ -184,6 +184,9 @@ onUnmounted(() => {
   position: relative;
   z-index: 2;
   transition: transform 0.2s;
+  width: 32px;
+  height: 32px;
+  filter: brightness(0) invert(1);
 }
 
 .ripple {
@@ -192,10 +195,10 @@ onUnmounted(() => {
   left: 50%;
   width: 0;
   height: 0;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  animation: ripple 2s infinite;
+  animation: ripple 3s infinite;
 }
 
 @keyframes ripple {
@@ -215,12 +218,13 @@ onUnmounted(() => {
   position: fixed;
   min-width: 300px;
   max-width: 90vw;
-  background: #fff;
+  background: var(--color-header-bg);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   z-index: 999999;
   font-family: Arial, sans-serif;
   animation: panelEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 @keyframes panelEnter {
@@ -235,11 +239,11 @@ onUnmounted(() => {
 }
 
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: var(--color-header-bg);
+  color: var(--color-header-text);
   padding: 12px 16px;
   border-radius: 12px 12px 0 0;
-  font-weight: bold;
+  font-weight: 600;
   cursor: move;
   user-select: none;
   display: flex;
@@ -256,7 +260,7 @@ onUnmounted(() => {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   transition: left 0.5s;
 }
 
@@ -289,6 +293,7 @@ onUnmounted(() => {
 }
 
 .content-wrapper {
+  background: #fff;
   animation: contentSlide 0.3s ease-out 0.1s both;
 }
 

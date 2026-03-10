@@ -81,12 +81,12 @@ export class PlatformUtils {
  * 日志颜色常量
  */
 export enum LogColors {
-  PRIMARY = '#667eea',
-  SUCCESS = '#4caf50',
-  ERROR = '#ff5722',
-  WARNING = '#ff9800',
-  INFO = '#2196F3',
-  MUTED = '#999',
+  PRIMARY = '#3498db',
+  SUCCESS = '#27ae60',
+  ERROR = '#e74c3c',
+  WARNING = '#f39c12',
+  INFO = '#2980b9',
+  MUTED = '#95a5a6',
 }
 
 /**

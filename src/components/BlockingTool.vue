@@ -2,12 +2,17 @@
 <template>
   <div class="content">
     <div v-if="PlatformUtils.isDouyin(currentPlatform) && isDouyinSearchPage" class="warning-banner">
-      ⚠️ 不建议在抖音搜索页面使用本脚本，可能触发风控导致搜索失败！请切换到其他页面使用。
+      ⚠ 不建议在抖音搜索页面使用本脚本，可能触发风控导致搜索失败！请切换到其他页面使用。
     </div>
     <div class="form-group">
       <label>搜索关键词：</label>
       <div class="input-with-dropdown">
-        <input v-model="state.keyword" type="text" placeholder="用逗号分隔，例如：新闻,日报,资讯" :disabled="state.isRunning">
+        <input
+          v-model="state.keyword"
+          type="text"
+          placeholder="用逗号分隔，例如：新闻,日报,资讯"
+          :disabled="state.isRunning"
+        >
         <div ref="dropdownRef" class="template-dropdown">
           <button
             class="dropdown-btn"
@@ -15,7 +20,7 @@
             :disabled="state.isRunning"
             @click="showDropdown = !showDropdown"
           >
-            📋 预设 ▼
+            ★ 预设
           </button>
           <div v-if="showDropdown" class="dropdown-menu">
             <div
@@ -85,8 +90,16 @@
     </div>
     <log-viewer ref="logViewer" filename="拉黑日志" :log-key="`blocking-${currentPlatform?.name || 'unknown'}`" />
     <div class="counter">
-      <span v-if="state.currentKeyword">{{ state.currentKeyword }}：已拉黑：<span class="count">{{ state.keywordBlockedCount }}</span>{{ state.limit > 0 ? ` / ${state.limit}` : '' }} | 总计：<span class="count">{{ state.blockedCount }}</span></span>
-      <span v-else>已拉黑：<span class="count">{{ state.blockedCount }}</span></span>
+      <span v-if="state.currentKeyword">
+        {{ state.currentKeyword }}：已拉黑：
+        <span class="count">{{ state.keywordBlockedCount }}</span>
+        {{ state.limit > 0 ? ` / ${state.limit}` : '' }} | 总计：
+        <span class="count">{{ state.blockedCount }}</span>
+      </span>
+      <span v-else>
+        已拉黑：
+        <span class="count">{{ state.blockedCount }}</span>
+      </span>
     </div>
   </div>
 </template>
@@ -98,6 +111,8 @@ import { getCurrentPlatform, LogColors, PlatformUtils } from '../platforms';
 import { useTemplateStore } from '../stores/templateStore';
 import { sleep } from '../utils';
 import LogViewer from './LogViewer.vue';
+
+const SEPARATOR_REGEX = /[,，]/;
 
 const state = reactive({
   keyword: '',
@@ -179,9 +194,13 @@ onMounted(() => {
 });
 
 // 实时保存设置
-watch(state, () => {
-  saveSettings();
-}, { deep: true });
+watch(
+  state,
+  () => {
+    saveSettings();
+  },
+  { deep: true }
+);
 
 onUnmounted(() => {
   saveSettings();
@@ -216,7 +235,10 @@ async function startTask() {
   state.currentKeyword = '';
   logViewerRef.value?.clearLogs();
 
-  const keywords = state.keyword.split(/[,，]/).map((k) => k.trim()).filter((k) => k);
+  const keywords = state.keyword
+    .split(SEPARATOR_REGEX)
+    .map((k) => k.trim())
+    .filter((k) => k);
 
   for (let i = 0; i < keywords.length && !state.isStopped; i++) {
     const currentKeyword = keywords[i];
@@ -251,8 +273,7 @@ async function processKeyword(keywordName: string) {
     }
 
     for (const item of users) {
-      if ((state.limit > 0 && state.keywordBlockedCount >= state.limit) || state.isStopped)
-        break;
+      if ((state.limit > 0 && state.keywordBlockedCount >= state.limit) || state.isStopped) break;
 
       const user: User = {
         nickname: item.user_info.nickname,
@@ -275,7 +296,10 @@ async function processKeyword(keywordName: string) {
       if (state.onlyVerified && state.verifyFilter && PlatformUtils.isDouyin(currentPlatform)) {
         const verifyType = PlatformUtils.getVerifyType(currentPlatform!, item.user_info);
         if (verifyType) {
-          const filters = state.verifyFilter.split(/[,，]/).map((f) => f.trim()).filter((f) => f);
+          const filters = state.verifyFilter
+            .split(SEPARATOR_REGEX)
+            .map((f) => f.trim())
+            .filter((f) => f);
           const matched = filters.some((filter) => verifyType.includes(filter));
           if (!matched) {
             addLog(`认证类型不匹配：${user.nickname} [${verifyType}]（跳过）`, LogColors.MUTED);
@@ -287,15 +311,14 @@ async function processKeyword(keywordName: string) {
       if (await currentPlatform!.blockUser(user)) {
         state.keywordBlockedCount++;
         state.blockedCount++;
-        addLog(`✅ 拉黑成功：${user.nickname}`, LogColors.SUCCESS);
+        addLog(`✓ 拉黑成功：${user.nickname}`, LogColors.SUCCESS);
       } else {
-        addLog(`❌ 拉黑失败：${user.nickname}`, LogColors.ERROR);
+        addLog(`✗ 拉黑失败：${user.nickname}`, LogColors.ERROR);
       }
       await sleep(state.delay);
     }
 
-    if (!hasMore)
-      break;
+    if (!hasMore) break;
     currentPage++;
     await sleep(state.pageDelay);
   }
@@ -313,7 +336,7 @@ function stopTask() {
 @import '../styles/common.css';
 
 .count {
-  color: #667eea;
+  color: var(--color-primary);
 }
 
 .hint {
@@ -328,17 +351,17 @@ function stopTask() {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: #f5f5f5;
+  background: #ecf0f1;
   border-radius: 4px;
   cursor: pointer;
   font-size: 13px;
-  color: #667eea;
+  color: var(--color-primary);
   transition: background-color 0.2s;
   user-select: none;
 }
 
 .advanced-toggle:hover {
-  background: #ebebeb;
+  background: #d5dbdb;
 }
 
 .arrow {
@@ -382,18 +405,18 @@ function stopTask() {
 .dropdown-btn {
   padding: 8px 12px;
   font-size: 11px;
-  background: #f0f4ff;
-  border: 1px solid #d0d9ff;
+  background: #ecf0f1;
+  border: 1px solid #bdc3c7;
   border-radius: 4px;
-  color: #667eea;
+  color: var(--color-primary);
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
 .dropdown-btn:hover:not(:disabled) {
-  background: #e6edff;
-  border-color: #b8c5ff;
+  background: #d5dbdb;
+  border-color: #95a5a6;
 }
 
 .dropdown-btn:disabled {

@@ -1,10 +1,27 @@
-import type { Platform, SearchResult, User } from './types';
+import type { Platform, SearchResult, Theme, User } from './types';
 import UAParser from 'ua-parser-js';
 import { PlatformType } from './types';
+
+const UIFID_REGEX = /UIFID=([^;]+)/; // cspell:ignore UIFID
+
+const DOUYIN_THEME: Theme = {
+  primary: '#1f1f1f',
+  primaryHover: '#333',
+  secondary: '#e74c3c',
+  secondaryHover: '#c0392b',
+  success: '#27ae60',
+  error: '#e74c3c',
+  warning: '#f39c12',
+  info: '#3498db',
+  muted: '#95a5a6',
+  headerBg: '#1f1f1f',
+  headerText: '#fff',
+};
 
 export class DouyinPlatform implements Platform {
   name = PlatformType.DOUYIN;
   displayName = '抖音';
+  theme = DOUYIN_THEME;
   private lastSearchId: string | null = null;
 
   isCurrentPlatform(): boolean {
@@ -34,7 +51,7 @@ export class DouyinPlatform implements Platform {
       platform: this.detectPlatform(),
       downlink: nav.connection?.downlink || '',
       effective_type: nav.connection?.effectiveType || '',
-      round_trip_time: nav.connection?.rtt || ''
+      round_trip_time: nav.connection?.rtt || '',
     } as any;
   }
 
@@ -50,7 +67,7 @@ export class DouyinPlatform implements Platform {
   }
 
   private getUifid(): string | null {
-    const match = document.cookie.match(/UIFID=([^;]+)/);
+    const match = document.cookie.match(UIFID_REGEX);
     return match ? match[1] : null;
   }
 
@@ -91,7 +108,7 @@ export class DouyinPlatform implements Platform {
       support_dash: '1',
       version_code: '170400',
       version_name: '17.4.0',
-      ...common
+      ...common,
     };
 
     const webid = this.getWebid();
@@ -149,7 +166,7 @@ export class DouyinPlatform implements Platform {
       support_dash: '1',
       version_code: '170400',
       version_name: '17.4.0',
-      ...common
+      ...common,
     });
 
     const blockBody = new URLSearchParams({

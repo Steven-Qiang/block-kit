@@ -3,14 +3,22 @@
     <div class="log-header">
       <span>执行日志</span>
       <div class="log-controls">
-        <button class="log-control-btn" :title="autoScroll ? '关闭自动滚动' : '开启自动滚动'" @click="autoScroll = !autoScroll">
-          {{ autoScroll ? '🔓' : '🔒' }}
+        <button
+          class="log-control-btn"
+          :title="autoScroll ? '关闭自动滚动' : '开启自动滚动'"
+          @click="autoScroll = !autoScroll"
+        >
+          <img :src="autoScroll ? lockSvg : unlockSvg" :alt="autoScroll ? '锁定' : '解锁'">
         </button>
-        <button class="log-control-btn" :title="logExpanded ? '收起日志' : '展开日志'" @click="logExpanded = !logExpanded">
-          {{ logExpanded ? '▲' : '▼' }}
+        <button
+          class="log-control-btn"
+          :title="logExpanded ? '收起日志' : '展开日志'"
+          @click="logExpanded = !logExpanded"
+        >
+          <img :src="logExpanded ? shrinkSvg : expandSvg" :alt="logExpanded ? '收起' : '展开'">
         </button>
         <button class="log-control-btn" title="清除日志" @click="clearLogs">
-          🗑️
+          <img :src="trashSvg" alt="删除">
         </button>
       </div>
     </div>
@@ -27,6 +35,11 @@
 
 <script setup lang="ts">
 import { nextTick, ref, useTemplateRef } from 'vue';
+import trashSvg from '../assets/ashbin.svg';
+import expandSvg from '../assets/fullscreen-expand.svg';
+import shrinkSvg from '../assets/fullscreen-shrink.svg';
+import lockSvg from '../assets/lock.svg';
+import unlockSvg from '../assets/unlock.svg';
 
 interface LogEntry {
   msg: string;
@@ -103,12 +116,12 @@ defineExpose({
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: #f8f9fa;
+  background: #ecf0f1;
   border-radius: 4px 4px 0 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #bdc3c7;
   font-size: 13px;
-  font-weight: bold;
-  color: #333;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
 .log-controls {
@@ -121,14 +134,23 @@ defineExpose({
   padding: 4px 6px;
   font-size: 12px;
   background: none;
-  border: 1px solid #ddd;
+  border: 1px solid #bdc3c7;
   border-radius: 3px;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.log-control-btn img {
+  width: 16px;
+  height: 16px;
+  filter: invert(0.4);
 }
 
 .log-control-btn:hover {
-  background: #e9ecef;
+  background: #d5dbdb;
 }
 
 .log-area {
