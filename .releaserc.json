@@ -32,7 +32,7 @@
       {
         "assets": [
           {
-            "path": "dist/social-block-kit.user.js",
+            "path": "dist/block-kit.user.js",
             "label": "Userscript"
           }
         ]

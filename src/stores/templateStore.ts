@@ -9,7 +9,7 @@ export interface KeywordTemplate {
 
 export type CreateTemplateData = Omit<KeywordTemplate, 'id' | 'source'>;
 
-const STORAGE_KEY = 'social-block-kit-templates';
+const STORAGE_KEY = 'block-kit-templates';
 
 const COMMUNITY_TEMPLATES: KeywordTemplate[] = [
   { id: 'community-fake-propaganda', name: '虚假宣传', icon: '🚫', keywords: '助农,扶贫,山区,贫困,养生,中医,秘方,创业,成功,财富,逆袭', source: 'community', author: 'Steven-Qiang' },

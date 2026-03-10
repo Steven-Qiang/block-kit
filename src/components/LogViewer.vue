@@ -50,7 +50,7 @@ const autoScroll = ref(true);
 const logAreaRef = useTemplateRef('logArea');
 
 function getLogsKey() {
-  return `social-block-kit-logs-${props.logKey}`;
+  return `block-kit-logs-${props.logKey}`;
 }
 
 function saveLogs() {

@@ -118,7 +118,7 @@ const currentPlatform = getCurrentPlatform();
 const logViewerRef = useTemplateRef('logViewer');
 const isDouyinSearchPage = ref(false);
 
-const SETTINGS_KEY = 'social-block-kit-settings';
+const SETTINGS_KEY = 'block-kit-settings';
 
 function saveSettings() {
   GM_setValue(SETTINGS_KEY, JSON.stringify(state));

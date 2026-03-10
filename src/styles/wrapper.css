@@ -1,4 +1,4 @@
-.social-block-kit-wrapper {
+.block-kit-wrapper {
   all: initial;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
@@ -7,9 +7,9 @@
   box-sizing: border-box;
 }
 
-.social-block-kit-wrapper *,
-.social-block-kit-wrapper *::before,
-.social-block-kit-wrapper *::after {
+.block-kit-wrapper *,
+.block-kit-wrapper *::before,
+.block-kit-wrapper *::after {
   box-sizing: border-box;
   font-family: inherit;
 }

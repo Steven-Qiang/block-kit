@@ -1,19 +1,19 @@
-# 社交平台自动拉黑工具
+# 批量拉黑工具
 
-针对社交平台关键词搜索用户（如「日报」「新闻」等营销号）进行批量拉黑的油猴脚本。支持抖音、哔哩哔哩等平台，并提供黑名单清理功能。
+针对关键词搜索用户（如「日报」「新闻」等营销号）进行批量拉黑的油猴脚本。支持抖音、哔哩哔哩等平台，并提供黑名单清理功能。
 
-[![Release](https://github.com/Steven-Qiang/social-block-kit/actions/workflows/release.yml/badge.svg)](https://github.com/Steven-Qiang/social-block-kit/actions/workflows/release.yml)
-[![License](https://img.shields.io/github/license/Steven-Qiang/social-block-kit)](./LICENSE)
-[![Version](https://img.shields.io/github/package-json/v/Steven-Qiang/social-block-kit)](./package.json)
+[![Release](https://github.com/Steven-Qiang/block-kit/actions/workflows/release.yml/badge.svg)](https://github.com/Steven-Qiang/block-kit/actions/workflows/release.yml)
+[![License](https://img.shields.io/github/license/Steven-Qiang/block-kit)](./LICENSE)
+[![Version](https://img.shields.io/github/package-json/v/Steven-Qiang/block-kit)](./package.json)
 
 <div align="center">
-  <img src="https://github.com/Steven-Qiang/social-block-kit/blob/main/assets/screenshot.douyin.png?raw=true" width="45%" alt="抖音拉黑界面" />
-  <img src="https://github.com/Steven-Qiang/social-block-kit/blob/main/assets/screenshot.bilibili.png?raw=true" width="45%" alt="B站拉黑界面" />
+  <img src="https://github.com/Steven-Qiang/block-kit/blob/main/assets/screenshot.douyin.png?raw=true" width="45%" alt="抖音拉黑界面" />
+  <img src="https://github.com/Steven-Qiang/block-kit/blob/main/assets/screenshot.bilibili.png?raw=true" width="45%" alt="B站拉黑界面" />
 </div>
 
 <div align="center">
-  <img src="https://github.com/Steven-Qiang/social-block-kit/blob/main/assets/screenshot.template.png?raw=true" width="45%" alt="预设管理界面" />
-  <img src="https://github.com/Steven-Qiang/social-block-kit/blob/main/assets/screenshot.block-cleaner.png?raw=true" width="45%" alt="黑名单清理界面" />
+  <img src="https://github.com/Steven-Qiang/block-kit/blob/main/assets/screenshot.template.png?raw=true" width="45%" alt="预设管理界面" />
+  <img src="https://github.com/Steven-Qiang/block-kit/blob/main/assets/screenshot.block-cleaner.png?raw=true" width="45%" alt="黑名单清理界面" />
 </div>
 
 ## 特性
@@ -38,7 +38,7 @@
 ## 安装
 
 1. 安装 [Tampermonkey](https://www.tampermonkey.net/)
-2. [点击安装脚本](https://github.com/Steven-Qiang/social-block-kit/releases/latest/download/social-block-kit.user.js)
+2. [点击安装脚本](https://github.com/Steven-Qiang/block-kit/releases/latest/download/block-kit.user.js)
 3. 访问支持的平台网页版
 
 ## 使用
