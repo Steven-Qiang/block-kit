@@ -56,7 +56,7 @@
 
 1. 安装油猴管理器浏览器扩展
 2. 选择下列一个安装源：
-   - [GreasyFork](https://greasyfork.org/zh-CN/scripts/569170-%E6%89%B9%E9%87%8F%E6%8B%89%E9%BB%91%E5%B7%A5%E5%85%B7)
+   - [GreasyFork](https://greasyfork.org/zh-CN/scripts/569170)
    - [GitHub Releases](https://github.com/Steven-Qiang/block-kit/releases/latest/download/block-kit.user.js)
 3. 在弹出的对话框中点击「安装」
 4. 访问支持的平台网页版即可使用
@@ -66,7 +66,7 @@
 ### 批量拉黑用户
 
 1. 登录对应平台网页版
-2. 右上角浮球面板会自动出现
+2. 左上角浮球面板会自动出现
 3. 输入要搜索的关键词（如：`新闻`、`日报`、`资讯`）
    - 支持多个关键词，用逗号分隔：`新闻,日报,资讯`
 4. 设置目标拉黑数量（0 表示不限制）
